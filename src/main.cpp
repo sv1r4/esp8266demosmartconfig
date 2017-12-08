@@ -1,29 +1,31 @@
-#include "ESP8266WiFi.h"
+#include <ESP8266WiFi.h>
+
 void setup() {
+
   Serial.begin(115200);
-  /* Set ESP32 to WiFi Station mode */
-  WiFi.mode(WIFI_AP_STA);
-  /* start SmartConfig */
+  delay(10);
+
+  WiFi.mode(WIFI_STA);
+  delay(500);
+
   WiFi.beginSmartConfig();
 
-  /* Wait for SmartConfig packet from mobile */
-  Serial.println("Waiting for SmartConfig.");
-  while (!WiFi.smartConfigDone()) {
+  while(WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+    if(WiFi.smartConfigDone()){
+      Serial.println("WiFi Smart Config Done.");
+    }
   }
-  Serial.println("");
-  Serial.println("SmartConfig done.");
 
-  /* Wait for WiFi to connect to AP */
-  Serial.println("Waiting for WiFi");
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("WiFi Connected.");
-  Serial.print("IP Address: ");
-  Serial.println(WiFi.localIP());
+  Serial.println("");
+  Serial.println("");
+
+  WiFi.printDiag(Serial);
+
+
 }
+
 void loop() {
+  yield();
 }
